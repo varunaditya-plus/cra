@@ -17,5 +17,5 @@ xcrun swiftc -swift-version 5 -parse-as-library ${CRA_TEST_SWIFTC_FLAGS:-} \
   "$TEST_DIR/SidebarListDrop.swift" Sources/Cra/UI/Sidebar/List/SpaceListView+Drop.swift \
   Tests/Support/TidyTitlesServiceSupport.swift Tests/Support/ManualScheduler.swift \
   Tests/TidyTitlesServiceTests.swift -o "$TEST_DIR/tidy-titles-tests"
-"$TEST_DIR/tidy-titles-tests" "$@"
+"$TEST_DIR/tidy-titles-tests"
 [ -z "${CRA_TEST_KEEP:-}" ] || cp "$TEST_DIR/tidy-titles-tests" "$CRA_TEST_KEEP/"

@@ -8,5 +8,5 @@ xcrun swiftc -swift-version 5 -parse-as-library ${CRA_TEST_SWIFTC_FLAGS:-} \
   Packages/CraCore/Sources/CraCore/TidyTitles.swift Sources/Cra/UI/Sidebar/List/TidyTitleLayout.swift \
   Sources/Cra/UI/Sidebar/List/TidyTitleSweep.swift \
   Tests/TidyTitleLayoutTests.swift -o "$TEST_DIR/tidy-title-layout-tests"
-"$TEST_DIR/tidy-title-layout-tests" "$@"
+"$TEST_DIR/tidy-title-layout-tests"
 [ -z "${CRA_TEST_KEEP:-}" ] || cp "$TEST_DIR/tidy-title-layout-tests" "$CRA_TEST_KEEP/"

@@ -10,48 +10,23 @@ enum TidyTitlesServiceTests {
 
     @MainActor
     static func main() async throws {
-        // The drop/store/service regression needs no application or native window.
-        let mode = CommandLine.arguments.dropFirst().first
-        let headless = mode == "origin" || mode == "headless"
-        if !headless {
-            _ = NSApplication.shared
-            NSApp.setActivationPolicy(.prohibited)
-        }
         let data = FileManager.default.temporaryDirectory.appendingPathComponent("cra-tidy-titles-\(UUID().uuidString)", isDirectory: true)
         defer { try? FileManager.default.removeItem(at: data) }
         setenv("CRA_DATA_DIR", data.path, 1)
         setenv("CRA_ARC_DIR", data.appendingPathComponent("NoArcProfile").path, 1)
-        if mode == "origin" {
-            await nativeDropOrigin()
-        } else if CommandLine.arguments.dropFirst().first == "adapter" {
-            try await adapterRecovery()
-        } else if CommandLine.arguments.dropFirst().first == "owner" {
-            await staleCompletionCannotRemoveNewRequest()
-        } else if CommandLine.arguments.dropFirst().first == "availability" {
-            await unavailableBeforeApply()
-            await availabilityRefresh()
-            await freshAvailabilityBeforeReveal()
-        } else if CommandLine.arguments.dropFirst().first == "availability-reveal" {
-            await unavailableBeforeApply(completedOnly: true)
-        } else if CommandLine.arguments.dropFirst().first == "availability-refresh" {
-            await availabilityRefresh()
-        } else if CommandLine.arguments.dropFirst().first == "availability-fresh" {
-            await freshAvailabilityBeforeReveal()
-        } else {
-            await nativeDropOrigin()
-            await unavailableBeforeApply()
-            await availabilityRefresh()
-            await freshAvailabilityBeforeReveal()
-            await cancelledBeforeGeneration()
-            await offOnRejectsLateCompletion()
-            await staleCompletionCannotRemoveNewRequest()
-            await scheduledRevealAndExpiry()
-            await cancelledExpiryCannotClearNewEffect()
-            await completionGuards()
-            await currentOriginMetrics()
-            await teardown()
-            try await adapterRecovery()
-        }
+        await nativeDropOrigin()
+        await unavailableBeforeApply()
+        await availabilityRefresh()
+        await freshAvailabilityBeforeReveal()
+        await cancelledBeforeGeneration()
+        await offOnRejectsLateCompletion()
+        await staleCompletionCannotRemoveNewRequest()
+        await scheduledRevealAndExpiry()
+        await cancelledExpiryCannotClearNewEffect()
+        await completionGuards()
+        await currentOriginMetrics()
+        await teardown()
+        try await adapterRecovery()
         print("Tidy titles service: \(checks) checks passed")
     }
 
@@ -138,8 +113,8 @@ enum TidyTitlesServiceTests {
     }
 
     @MainActor
-    private static func unavailableBeforeApply(completedOnly: Bool = false) async {
-        for completed in completedOnly ? [true] : [false, true] {
+    private static func unavailableBeforeApply() async {
+        for completed in [false, true] {
             let f = Fixture()
             f.store.pinTab(f.id)
             await f.generator.waitFor(1)

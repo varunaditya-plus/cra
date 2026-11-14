@@ -113,8 +113,7 @@ enum TidyTitleLayoutTests {
                    "\(reason) clears native text masks and the row's lifted z-position")
         }
 
-        let mode = CommandLine.arguments.dropFirst().first
-        if mode == nil || mode == "edit" {
+        do {
             let token = UUID(), pieces = begin(token)
             sweep.update(effectToken: token, editing: false)
             expect(sweep.isActive && pieces.old.superview === row && pieces.sparks.superlayer === row.layer,
@@ -124,7 +123,7 @@ enum TidyTitleLayoutTests {
             expect(ended == 1, "interruption ends the bright subtitle exactly once")
         }
 
-        if mode == nil || mode == "withdraw" {
+        do {
             let token = UUID(), pieces = begin(token)
             sweep.update(effectToken: nil, editing: false)
             expectCleared(pieces, "withdrawing the service effect")
@@ -133,7 +132,7 @@ enum TidyTitleLayoutTests {
             expectCleared(replaced, "replacing the service effect")
         }
 
-        if mode == nil || mode == "owner" {
+        do {
             let old = UUID(), current = UUID()
             let oldPieces = begin(old)
             let pieces = begin(current)
