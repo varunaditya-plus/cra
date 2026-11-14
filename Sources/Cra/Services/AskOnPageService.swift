@@ -17,7 +17,6 @@ final class AskOnPageService {
         let id: UUID
         let question: String
         var answer: AskOnPage.Answer?
-        var source = ""
         var isPartialPage = false
         var fractionRead: Double?
         var olderMessagesHidden = false
@@ -191,7 +190,6 @@ final class AskOnPageService {
                     guard self?.accepts(id) == true else { self?.refresh(); return }
                     self?.phase = .answering
                     self?.current?.answer = nil
-                    self?.current?.source = fitted.source
                     self?.current?.isPartialPage = fitted.isPartialPage
                     self?.current?.fractionRead = fitted.fractionRead
                     self?.current?.olderMessagesHidden = fitted.olderMessagesHidden

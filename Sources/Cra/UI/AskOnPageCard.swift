@@ -461,8 +461,8 @@ private struct AskOnPageMessageView: View {
     }
 
     private func answerText(_ answer: AskOnPage.Answer) -> Text {
-        guard let key = answer.keyAnswer, !key.isEmpty,
-              let range = answer.text.range(of: key, options: .literal) else { return Text(answer.text) }
+        guard let emphasisRange = answer.emphasisRange,
+              let range = Range(emphasisRange, in: answer.text) else { return Text(answer.text) }
         let prefix = Text(String(answer.text[..<range.lowerBound]))
         let emphasis = Text(String(answer.text[range])).bold()
         let suffix = Text(String(answer.text[range.upperBound...]))

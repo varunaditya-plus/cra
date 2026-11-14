@@ -215,8 +215,9 @@ enum AskOnPageLifecycleTests {
         await first.start("Completed history")
         first.provider.finish(1, draft: answer)
         await settled(first.service)
-        expect(first.service.messages.first?.answer?.hasVerifiedQuote == true && first.service.messages.first?.source.isEmpty == false,
-            "the completed owner holds actual native citation and fitted source before invalidation")
+        expect(first.service.messages.first?.answer?.hasVerifiedQuote == true
+               && first.service.messages.first?.answer?.quotes.first?.text == answer.excerpts?.first,
+            "the completed owner holds the exact verified source excerpt before invalidation")
         second.service.ask("Pending beside history", language: "English")
         store.settings = AppSettings()
         expect(first.service.messages.isEmpty && first.service.current == nil && second.service.current == nil,
