@@ -135,18 +135,6 @@ enum TidyDownloadsServiceTests {
         defer { try? FileManager.default.removeItem(at: root) }
         setenv("CRA_DATA_DIR", root.appendingPathComponent("profile").path, 1)
         setenv("CRA_TIDY_FAKE_MODEL", "off", 1)
-        if CommandLine.arguments.contains("--actor-reentry-regression") {
-            try await replacementDuringEligibility(root)
-            return
-        }
-        if CommandLine.arguments.contains("--replacement-regression") {
-            try await replacementDuringInference(root)
-            return
-        }
-        if CommandLine.arguments.contains("--transfer-regression") {
-            try await sourceMovesBetweenWindows(root)
-            return
-        }
         try await replacementDuringEligibility(root)
         try await replacementDuringInference(root)
         try await destinationCallbackOwnership(root)
@@ -828,7 +816,7 @@ enum TidyDownloadsServiceTests {
     private static func sourceTabCloses(_ root: URL) async throws {
         let f = try DownloadFixture(root), path = try f.file()
         let tab = f.store.createTab(url: "https://source.test", title: "Captured page")
-        f.service.noteSource(1, window: f.store.activeWindowID, tab: tab.tab!, referrer: nil)
+        f.service.noteSource(1, window: f.store.activeWindowID, tabID: tab.id, tab: tab.tab!, referrer: nil)
         f.store.archiveTab(tab.id, reason: .manual)
         let task = f.finish(path: path)
         await f.model.waitForRequests()

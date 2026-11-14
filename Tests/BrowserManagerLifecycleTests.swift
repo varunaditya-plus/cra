@@ -76,11 +76,6 @@ enum BrowserManagerLifecycleTests {
 
     @MainActor
     static func main() async {
-        if ProcessInfo.processInfo.environment["CRA_TEST_DOWNLOAD_ADOPTION"] == "1" {
-            downloadSourceAdoptionCase()
-            print("Download source adoption: \(checks) checks passed")
-            return
-        }
         downloadSourceAdoptionCase()
         await sparePagesCase()
         await tabFaviconsCase()

@@ -45,7 +45,7 @@ final class TidyDownloadsService {
     }
 
     private struct Source {
-        let tab: UUID?
+        let tab: UUID
         let snapshot: TidyDownloads.Source
     }
 
@@ -72,7 +72,7 @@ final class TidyDownloadsService {
     }
 
     /// Called only for a running download. Terminal notifications must not recapture a source.
-    func noteSource(_ id: UInt32, window: UUID, tabID: UUID? = nil, tab: TabData, referrer: TabData?) {
+    func noteSource(_ id: UInt32, window: UUID, tabID: UUID, tab: TabData, referrer: TabData?) {
         let key = Key(download: id, window: window)
         if sources[key] == nil, requests[key] == nil {
             sources[key] = Source(tab: tabID, snapshot: TidyDownloads.Source(tab: tab, referrer: referrer))
@@ -81,7 +81,6 @@ final class TidyDownloadsService {
 
     /// A live browser keeps its initiating snapshot when another window adopts it. Retire the
     /// old owner's keys so its later teardown cannot cancel the download in its new owner.
-    @discardableResult
     func transferSources(tab: UUID, from old: UUID, to new: UUID) -> [UInt32] {
         guard old != new else { return [] }
         let keys = sources.keys.filter { $0.window == old && sources[$0]?.tab == tab }
