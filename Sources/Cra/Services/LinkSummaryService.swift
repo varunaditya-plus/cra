@@ -270,7 +270,6 @@ enum LinkSummaryModel {
         case instructions(String)
         case prompt(String)
         case schema(GenerationSchema)
-        case transcript([Transcript.Entry])
     }
     typealias Counter = (TokenInput) async throws -> Int
     typealias Stream = (LanguageModelSession, String, Int, @escaping (LinkSummaryPrompt.Answer?) -> Void) async throws -> LinkSummaryPrompt.Answer?
@@ -283,13 +282,10 @@ enum LinkSummaryModel {
         let prompt = input.prompt
         let size = contextSize ?? model.contextSize
         if #available(macOS 26.4, *) {
-            // The fresh transcript already contains instructions. Count those through Instructions
-            // once, then any actual non-instruction entries; never invent previous hover history.
-            let history = session.transcript.filter { if case .instructions = $0 { return false }; return true }
             let count = count ?? tokenCount
             var tokens = 0
             for component in [TokenInput.instructions(LinkSummaryPrompt.instructions), .prompt(prompt),
-                              .schema(HoverCardAnswer.generationSchema), .transcript(history)] {
+                              .schema(HoverCardAnswer.generationSchema)] {
                 tokens += try await count(component)
                 try Task.checkCancellation()
             }
@@ -309,7 +305,6 @@ enum LinkSummaryModel {
         case .instructions(let instructions): return try await model.tokenCount(for: Instructions(instructions))
         case .prompt(let prompt): return try await model.tokenCount(for: prompt)
         case .schema(let schema): return try await model.tokenCount(for: schema)
-        case .transcript(let entries): return try await model.tokenCount(for: entries)
         }
     }
 

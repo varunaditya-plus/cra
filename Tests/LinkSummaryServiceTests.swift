@@ -157,13 +157,12 @@ import FoundationModels
                         let encoded = try! JSONSerialization.jsonObject(with: JSONEncoder().encode(schema)) as! [String: Any]
                         expect(encoded["x-order"] as? [String] == ["blocked", "userQuestion", "quickSummary", "details"], "preflight counts the actual single guided schema")
                         return 1_716 // Controlled total 2816, exactly context minus output/safety reserves.
-                    case .transcript(let history):
-                        expect(history.isEmpty, "fresh sessions contain no invented prior-hover transcript after instructions are counted once")
-                        return 0
                     }
                 }, contextSize: 4_096, stream: { session, prompt, limit, update in
                     sessions.append(session)
                     streamed.append(prompt)
+                    expect(session.transcript.allSatisfy { if case .instructions = $0 { return true }; return false },
+                           "a fresh preview session has no prior-hover transcript to count")
                     expect(limit == 1_024, "the stream enforces the same output reserve used by preflight")
                     if streamed.count == 1 {
                         oldPartial = update
@@ -203,7 +202,6 @@ import FoundationModels
                     case .schema:
                         countCalls += 1
                         return schemaOnly ? 2_817 : 1_117
-                    case .transcript: return 0
                     }
                 }, contextSize: 4_096, stream: { _, _, _, _ in streamCalls += 1; return answer })
             }, clock: ManualScheduler())

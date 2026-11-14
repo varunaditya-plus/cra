@@ -79,13 +79,6 @@ enum SidebarTidyMetrics { static let minimumRun: TimeInterval = 0.9 }
         expect(!TidyTabsService.fakeModel, "this harness exercises actual resolver hooks, not fake availability")
         _ = NSApplication.shared
         NSApp.setActivationPolicy(.prohibited)
-        if CommandLine.arguments.contains("--availability") {
-            await unrefreshedAvailability()
-            print("Link summary actual availability: \(checks) checks passed")
-            return
-        }
-        if CommandLine.arguments.contains("--title") { await titleAvailability(); return }
-        if CommandLine.arguments.contains("--image") { await imageAvailability(); return }
         await titleAvailability()
         await imageAvailability()
         await settingOffOn()
