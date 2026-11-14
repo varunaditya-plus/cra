@@ -14,4 +14,4 @@ xcrun swiftc -swift-version 5 -parse-as-library ${CRA_TEST_SWIFTC_FLAGS:-} \
   Tests/Support/ManualScheduler.swift \
   Tests/TidyTabsServiceTests.swift -o "$TEST_DIR/tidy-tabs-service-tests"
 [ -z "${CRA_TEST_KEEP:-}" ] || cp "$TEST_DIR/tidy-tabs-service-tests" "$CRA_TEST_KEEP/"
-"$TEST_DIR/tidy-tabs-service-tests" "$@"
+"$TEST_DIR/tidy-tabs-service-tests"

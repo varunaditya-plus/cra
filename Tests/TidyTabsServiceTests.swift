@@ -11,24 +11,16 @@ import Foundation
         setenv("CRA_TIDY_FAKE_MODEL", "off", 1)
         _ = TidyTabsService.fakeModel
         setenv("CRA_TIDY_FAKE_MODEL", "1", 1)
-        switch CommandLine.arguments.dropFirst().first {
-        case "failure": await failureRemainsRetryable()
-        case "settings": await settingsOffOn()
-        case "availability": await availabilityChanges()
-        case "delete": await removedSpace()
-        case "owner": await ownerLifetimes()
-        default:
-            await entryGuards()
-            await failureRemainsRetryable()
-            await emptyAndFittedSuccess()
-            await settingsOffOn()
-            await availabilityChanges()
-            await removedSpace()
-            await independentTargets()
-            await cancelledTask()
-            await ownerLifetimes()
-            await fittedConvergence()
-        }
+        await entryGuards()
+        await failureRemainsRetryable()
+        await emptyAndFittedSuccess()
+        await settingsOffOn()
+        await availabilityChanges()
+        await removedSpace()
+        await independentTargets()
+        await cancelledTask()
+        await ownerLifetimes()
+        await fittedConvergence()
         print("Tidy Tabs lifecycle: \(checks) checks passed")
     }
 
